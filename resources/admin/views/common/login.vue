@@ -17,6 +17,16 @@
 		        <input type="password" class="form-control" placeholder="密码" v-model="params.password">
 		        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
 		      </div>
+		      <div class="input-group form-group">
+                <input type="text" class="form-control" placeholder="验证码" v-model="params.captcha">
+                <div class="input-group-addon" style="padding:0px;border-right:0px;border-left:0px;">
+                	<img :src="captcha" ref="captcha" style="height:32px" v-if='captcha'/>
+                </div>
+                <a href="javascript:void(0)" class="input-group-addon" v-on:click="getCaptcha()">
+                	<i class="fa fa-refresh fa-spin" v-if="loadingCaptcha"></i>
+                	<i class="fa fa-refresh" v-else></i>
+                </a>
+              </div>
 		      <div class="row">
 		        <div class="col-xs-8" style="line-height:34px">
 		          <input type="checkbox" v-model="remember">记住密码
@@ -45,15 +55,15 @@ export default{
 	data () {
 		return {
 			params: {
-				'grant_type': 'password',
-	            'client_id': config.client_id,
-	            'client_secret': config.client_secret,
 	            'username': '',
 	            'password': '',
-	            'scope': ''
+	            'captcha': '',
+	            'key': ''
 			},
 			remember: false,
-			loging: false
+			loging: false,
+			captcha: null,
+			loadingCaptcha: false
 		}
 	},
 	computed: {
@@ -63,7 +73,7 @@ export default{
 	  })
 	},
 	created () {
-		this.initLogin();
+		this.getCaptcha()
 		if(this.user){
 			this.redirect()
 		}
@@ -75,12 +85,11 @@ export default{
 				return false
 			}
 			_this.loging = true
-			axios.post('/oauth/token', this.params)
+			axios.post('/api/v1/login', this.params)
 		    .then(response => {
 		    	_this.$store.commit('setToken', response.data)
 		    	window.axios.defaults.headers.Authorization = _this.token.token_type + " " + _this.token.access_token;
 		    	_this.doGetUser();
-		    	_this.remberLogin();
 		    })
 		    .catch (response => {
 		    	switch(response.response.status){
@@ -123,25 +132,6 @@ export default{
 		    	_this.loging = false
 		    });
 		},
-		remberLogin () {
-			if (this.remember) {
-				localStorage.setItem('remember', JSON.stringify({
-					username: this.params.username,
-					password: this.params.password
-				}))
-			}else{
-				localStorage.removeItem('remember')
-			}
-		},
-		initLogin(){
-			var remember = localStorage.getItem('remember')
-			if(remember){
-				remember = JSON.parse(remember)
-				this.remember = true
-				this.params.username = remember.username
-				this.params.password = remember.password
-			}
-		},
 		redirect () {
 			if (!this.$route.query.redirect || this.$route.query.redirect == '/login' || this.$route.query.redirect == '/'){
 		        // 获取用户菜单默认跳转
@@ -176,6 +166,27 @@ export default{
 		          query: this.$route.query.query
 		        });
 		    }
+		},
+		// 刷新图片验证码
+		getCaptcha () {
+			var _this = this;
+			var url = 'captcha/api/default?' + Math.random(0,10000000)
+			_this.loadingCaptcha = true
+			axios.get(url)
+		    .then(response => {
+		    	this.captcha = response.data.img
+		    	this.params.key = response.data.key
+		    	_this.loadingCaptcha = false
+		    })
+		    .catch (response => {
+		    	switch(response.status){
+		    		default: _this.$refs.alert.show({
+		    			title: response.status,
+		    			msg: response.status+'错误！'
+		    		})
+		    	}
+		    	_this.loadingCaptcha = false
+		    });
 		}
 	}
 }

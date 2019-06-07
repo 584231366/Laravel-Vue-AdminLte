@@ -11,5 +11,15 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js')
-    .sass('resources/sass/app.scss', 'public/css');
+mix.js('resources/admin/app.js', 'js/admin')
+   .sass('resources/admin/app.scss', 'css/admin')
+   .extract(['vue']);
+mix.version();
+
+mix.webpackConfig({
+    resolve:{
+        alias: {
+        	'vue-router$': 'vue-router/dist/vue-router.common.js'
+        }
+    }
+});

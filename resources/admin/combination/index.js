@@ -1,0 +1,12 @@
+require('./directive/CropImage.js');
+require('./directive/Datepicker.js');
+require('./directive/DefaultImage.js');
+require('./directive/Focus.js');
+require('./directive/Jstree.js');
+require('./directive/Loaded.js');
+require('./directive/Select2.js');
+require('./mixin/HttpStatusMsg.js');
+require('./mixin/Permission.js');
+require('./mixin/Role.js');
+require('./prototype/Datetime.js');
+require('./prototype/File.js');

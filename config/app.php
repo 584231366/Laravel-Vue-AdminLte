@@ -80,7 +80,7 @@ return [
     |
     */
 
-    'locale' => 'en',
+    'locale' => 'zh',
 
     /*
     |--------------------------------------------------------------------------
@@ -93,7 +93,7 @@ return [
     |
     */
 
-    'fallback_locale' => 'en',
+    'fallback_locale' => 'zh',
 
     /*
     |--------------------------------------------------------------------------
@@ -236,6 +236,8 @@ return [
         'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
         // 图片处理
         'Image' => Intervention\Image\Facades\Image::class,
+        // 自定义路由服务
+        'RoutesService' => App\Http\Facades\RoutesFacade::class,
     ],
 
 ];

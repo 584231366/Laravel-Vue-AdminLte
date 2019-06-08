@@ -12,7 +12,9 @@
 	          <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
 	        </div>
 	      </div>
-          <div v-if="loading"><i class="fa fa-spinner fa-pulse"></i></div>
+          <div v-if="loading" style="color:white" class="text-center">
+            <i class="fa fa-spinner fa-pulse"></i> 菜单加载中
+          </div>
           <v-tree-menus v-model="menus" v-else></v-tree-menus>
 	    </section>
 	    <!-- /.sidebar -->

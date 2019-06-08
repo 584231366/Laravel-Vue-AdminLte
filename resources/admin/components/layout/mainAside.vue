@@ -12,7 +12,8 @@
 	          <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
 	        </div>
 	      </div>
-	      <v-tree-menus :menus="menus"></v-tree-menus>
+          <div v-if="loading"><i class="fa fa-spinner fa-pulse"></i></div>
+          <v-tree-menus v-model="menus" v-else></v-tree-menus>
 	    </section>
 	    <!-- /.sidebar -->
 	  </aside>
@@ -43,7 +44,7 @@
                 _this.loading = true
                 axios.get('/api/v1/menus/umenus')
                 .then(response => {
-                    _this.menus = response.data
+                    _this.toMenusTree(response.data)
                     _this.loading = false
                 })
                 .catch (response => {
@@ -56,19 +57,41 @@
                     _this.loading = false
                 });
     		},
+            // 处理menus
+            toMenusTree (data) { 
+                var narr = {};
+                for (var i in data) { 
+                    narr[data[i].id] = this.menuNode(data[i])
+                }
+                for (var j in narr) {
+                    if(typeof narr[narr[j].pre_id] != 'undefined'){
+                        narr[narr[j].pre_id].children.push(narr[j])
+                    }
+                }
+                for (var k in narr) {
+                    if(!narr[k].pre_id){
+                        this.menus.push(narr[k])
+                    }
+                }
+            },
+            menuNode (d) { 
+                return {
+                    id: d.id,
+                    pre_id: d.pre_id,
+                    name: d.name,
+                    icon: d.icon,
+                    route: d.route,
+                    active: false,
+                    open: false,
+                    children: []
+                }
+            },
     		// 由菜单获取content header信息
     		setContentHeader (data) {
     			if (data && data.length) {
     				this.contentHeader.title = data[data.length-1].title
     				this.contentHeader.breadcrumb = data
     			}
-    		}
-    	},
-    	computed: {
-    		rootMenus () {
-    			return this.menus.filter(function(item){
-    				return item.pre_id == null
-    			});
     		}
     	},
 		components: {

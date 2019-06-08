@@ -2,7 +2,7 @@
   <div class="wrapper">
     <v-header></v-header>
     <v-main-aside ref="menus"></v-main-aside>
-    <div class="content-wrapper">
+    <div class="content-wrapper" v-loaded-callback="bodyResize">
       <v-content-header></v-content-header>
       <router-view></router-view>
     </div>
@@ -44,6 +44,11 @@ export default {
   			return _this.$refs.progress.hide()
   		}
   	}
+  },
+  methods: {
+    bodyResize () { 
+      $('body').resize()
+    }
   },
   components: {
     'v-header': header,

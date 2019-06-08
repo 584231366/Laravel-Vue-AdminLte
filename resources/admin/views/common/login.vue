@@ -147,6 +147,7 @@ export default{
 	                    		_this.$router.push({
 					                path: routes[i].route
 					            });
+					            window.resize();
 					            break;
 	                    	}
 	                    }
@@ -154,6 +155,7 @@ export default{
                 		_this.$router.push({
 			                path: '404'
 			            });
+			            window.resize();
                 	}
                     _this.loading = false
                 })

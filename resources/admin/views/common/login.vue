@@ -140,15 +140,21 @@ export default{
                 _this.loading = true
                 axios.get('/api/v1/menus/umenus')
                 .then(response => {
-                    var routes = response.data
-                    for(var i in routes){
-                    	if(routes[i].children == 0){
-                    		_this.$router.push({
-				                path: routes[i].route
-				            });
-				            break;
-                    	}
-                    }
+                	var routes = response.data
+                	if(routes.length){ 
+	                    for(var i in routes){
+	                    	if(routes[i].children == 0){
+	                    		_this.$router.push({
+					                path: routes[i].route
+					            });
+					            break;
+	                    	}
+	                    }
+                	}else{ 
+                		_this.$router.push({
+			                path: '404'
+			            });
+                	}
                     _this.loading = false
                 })
                 .catch (response => {

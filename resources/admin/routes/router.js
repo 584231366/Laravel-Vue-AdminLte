@@ -6,24 +6,17 @@ window.router =new VueRouter({
 	routes: [
 		        {
 				  path: '/',
+				  redirect: '/admin/login',
 				  component: {template: "<router-view/>"},
 				  children: [
 					{
-						  path: '/',
-						  name: 'base',
-						  redirect: '/admin/login',
-						  component: {template: "<router-view/>"},
-						  children: [
-						     {
-								 path: '/admin/login',
-								 name: 'login',
-								 meta: {
-									 public: true,
-									 title: '登录页'
-								 },
-								 components: require('../views/common/login.vue')
-							}
-						]
+						path: '/admin/login',
+						name: 'login',
+						meta: {
+							public: true,
+							title: '登录页'
+						},
+						components: require('../views/common/login.vue')
 					},
 					{
 						path: '/',
